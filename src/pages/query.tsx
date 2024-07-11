@@ -1,7 +1,6 @@
 import React from "react";
 import Layout from "@theme/Layout";
-import { useQuery, useMutation, useQueryClient, QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import axios from "axios";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import DataFetcher from "../components/dataFetcher/DataFetcher";
 
 const url = "https://restcountries.com/v3.1/all";

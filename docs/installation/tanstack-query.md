@@ -38,40 +38,110 @@ or just pick **g-uncode** and start firing all cylinders
     </TabItem>
 </Tabs>
 
-Add **Markdown or React** files to `src/pages` to create a **standalone page**:
+## Lets jump into make a custom hook and reusable component with Tanstack Query
 
-- `src/pages/index.js` → `localhost:3000/`
-- `src/pages/foo.md` → `localhost:3000/foo`
-- `src/pages/foo/bar.js` → `localhost:3000/foo/bar`
+A **Summary** of files needs to be created under `src/` to fulfill the **custom hook and reusable component**:
 
-## Create your first React Page
+- `src/pages/Query.tsx` → `localhost:3000/query`
+- `src/types.ts` → **Type constants**
+- `src/components/dataFetcher/DataFetcher.tsx` → **Reusable Component** (_U should make unique Component according to fetch item_)
 
-Create a file at `src/pages/my-react-page.js`:
+:::info Example
 
-```jsx title="src/pages/my-react-page.js"
+For fetching a **country api**, you can name the component as `CountryFetcher.tsx`
+
+:::
+
+- `src/components/dataFetcher/DataList.tsx` → **Reusable Component** (_U should make unique Component according to fetch item_)
+
+:::info Example
+
+For fetching a **country api**, you can name the component as `CountryList.tsx`
+
+:::
+
+- `src/hooks/useFetch.ts` → **Function** where the actual **functionality of React-Query** is managed.
+
+## Create your first root query Page
+
+Create a file at `src/pages/`:
+
+```jsx title="src/pages/Query.tsx"
 import React from "react";
-import Layout from "@theme/Layout";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import DataFetcher from "../components/dataFetcher/DataFetcher";
 
-export default function MyReactPage() {
+const url = "Required Api URL";
+const queryClient = new QueryClient();
+
+const Query = () => {
   return (
-    <Layout>
-      <h1>My React page</h1>
-      <p>This is a React page</p>
-    </Layout>
+    <QueryClientProvider client={queryClient}>
+      <DataFetcher url={url} keyword="country" />
+    </QueryClientProvider>
   );
+};
+
+export default Query;
+```
+
+A new page is now available at [http://localhost:3000/Query](http://localhost:3000/Query).
+
+## Create your first Component
+
+Create a file at `src/components/dataFetcher`:
+
+```jsx title="src/components/dataFetcher/DataFetcher.tsx"
+import React from "react";
+import { useFetch } from "@site/src/hooks/useFetch";
+import { Country } from "@site/src/types";
+import DataList from "./DataList";
+
+interface DataFetcherProps {
+  url: string;
+  keyword: string;
 }
+
+const DataFetcher: React.FC<DataFetcherProps> = ({ url, keyword }) => {
+  const { data, isError, isLoading } = useFetch<Country[]>(url, keyword);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error loading data</div>;
+  }
+
+  return <DataList data={data ?? []} />;
+};
+
+export default DataFetcher;
 ```
 
-A new page is now available at [http://localhost:3000/my-react-page](http://localhost:3000/my-react-page).
+## Create your first custom hook
 
-## Create your first Markdown Page
+Create a file at `src/hooks/`:
 
-Create a file at `src/pages/my-markdown-page.md`:
+```jsx title="src/hooks/useFetch.ts"
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
-```mdx title="src/pages/my-markdown-page.md"
-# My Markdown page
-
-This is a Markdown page
+export const useFetch = <T>(url: string, keyword: string) => {
+  return useQuery<T>({
+    queryKey: [{ keyword }, url],
+    queryFn: async (): Promise<T> => {
+      try {
+        const result = await axios.get(url);
+        return result.data;
+      } catch (error: any) {
+        if (error.response && error.response.status === 404) {
+          return [] as unknown as T;
+        } else {
+          throw error;
+        }
+      }
+    },
+  });
+};
 ```
-
-A new page is now available at [http://localhost:3000/my-markdown-page](http://localhost:3000/my-markdown-page).
