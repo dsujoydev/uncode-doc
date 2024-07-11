@@ -145,3 +145,55 @@ export const useFetch = <T>(url: string, keyword: string) => {
   });
 };
 ```
+
+## Specify types
+
+Create a file at `src/`:
+
+```jsx title="src/types.ts"
+export interface Country {
+  name: {
+    common: string,
+    official: string,
+  };
+  cca3: string;
+  region: string;
+  subregion: string;
+  population: number;
+}
+```
+
+:::note Example
+
+Provided a example type _interface_ for **country api**.
+
+:::
+
+## Show your Data list
+
+```jsx title="src/components/dataFetcher/DataList.tsx"
+import React from "react";
+import { Country } from "@site/src/types";
+
+interface DataListProps {
+  data: Country[];
+}
+
+const DataList: React.FC<DataListProps> = ({ data }) => {
+  return (
+    <div>
+      <h1>Data List</h1>
+      <ul>
+        {data.map((item, index) => (
+          //   <li key={index}>{JSON.stringify(item)}</li>
+          <li key={item.cca3}>
+            {item.name.common} ({item.region})
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default DataList;
+```

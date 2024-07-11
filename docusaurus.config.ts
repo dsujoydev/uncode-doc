@@ -8,7 +8,7 @@ const config: Config = {
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here
-  url: "https://your-docusaurus-site.example.com",
+  url: "https://uncode-doc.vercel.app/",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/",
@@ -71,7 +71,7 @@ const config: Config = {
         { to: "/blog", label: "Blog", position: "left" },
         { to: "query", label: "Query", position: "left" },
         {
-          href: "https://github.com/facebook/docusaurus",
+          href: "https://github.com/dsujoydev/uncode-doc",
           label: "GitHub",
           position: "right",
         },
@@ -94,15 +94,15 @@ const config: Config = {
           items: [
             {
               label: "Stack Overflow",
-              href: "https://stackoverflow.com/questions/tagged/docusaurus",
+              href: "https://stackoverflow.com/",
             },
             {
               label: "Discord",
-              href: "https://discordapp.com/invite/docusaurus",
+              href: "https://discord.gg/fZfmhb6V",
             },
             {
               label: "Twitter",
-              href: "https://twitter.com/docusaurus",
+              href: "https://twitter.com/",
             },
           ],
         },
@@ -115,7 +115,7 @@ const config: Config = {
             },
             {
               label: "GitHub",
-              href: "https://github.com/facebook/docusaurus",
+              href: "https://github.com/",
             },
           ],
         },
